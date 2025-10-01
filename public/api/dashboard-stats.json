@@ -1,0 +1,62 @@
+{
+  "stats": {
+    "totalUsers": 12,
+    "activeUsers": 8,
+    "pendingUsers": 2,
+    "inactiveUsers": 2,
+    "totalRevenue": 125000,
+    "monthlyGrowth": 12.5,
+    "newSignups": 24,
+    "conversionRate": 3.2
+  },
+  "recentActivity": [
+    {
+      "id": "1",
+      "type": "user_signup",
+      "message": "New user Rachel Green signed up",
+      "timestamp": "2024-01-16T10:30:00Z",
+      "user": {
+        "name": "Rachel Green",
+        "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=50&h=50&fit=crop&crop=face"
+      }
+    },
+    {
+      "id": "2",
+      "type": "user_login",
+      "message": "Alex Thompson logged in",
+      "timestamp": "2024-01-16T09:15:00Z",
+      "user": {
+        "name": "Alex Thompson",
+        "avatar": "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=50&h=50&fit=crop&crop=face"
+      }
+    },
+    {
+      "id": "3",
+      "type": "user_update",
+      "message": "Emily Davis updated profile",
+      "timestamp": "2024-01-15T16:45:00Z",
+      "user": {
+        "name": "Emily Davis",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face"
+      }
+    }
+  ],
+  "chartData": {
+    "userGrowth": [
+      { "month": "Jan", "users": 45 },
+      { "month": "Feb", "users": 52 },
+      { "month": "Mar", "users": 48 },
+      { "month": "Apr", "users": 61 },
+      { "month": "May", "users": 55 },
+      { "month": "Jun", "users": 67 }
+    ],
+    "revenue": [
+      { "month": "Jan", "revenue": 12000 },
+      { "month": "Feb", "revenue": 15000 },
+      { "month": "Mar", "revenue": 13500 },
+      { "month": "Apr", "revenue": 18000 },
+      { "month": "May", "revenue": 16500 },
+      { "month": "Jun", "revenue": 21000 }
+    ]
+  }
+}

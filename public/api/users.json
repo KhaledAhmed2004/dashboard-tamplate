@@ -1,0 +1,210 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "role": "Admin",
+      "status": "active",
+      "lastLogin": "2024-01-15",
+      "joinDate": "2023-06-15",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "2",
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "role": "Editor",
+      "status": "active",
+      "lastLogin": "2024-01-14",
+      "joinDate": "2023-08-20",
+      "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "3",
+      "name": "Mike Johnson",
+      "email": "mike.johnson@example.com",
+      "role": "User",
+      "status": "inactive",
+      "lastLogin": "2024-01-10",
+      "joinDate": "2023-09-10",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "4",
+      "name": "Sarah Wilson",
+      "email": "sarah.wilson@example.com",
+      "role": "Editor",
+      "status": "pending",
+      "lastLogin": "Never",
+      "joinDate": "2024-01-12",
+      "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "5",
+      "name": "David Brown",
+      "email": "david.brown@example.com",
+      "role": "User",
+      "status": "active",
+      "lastLogin": "2024-01-13",
+      "joinDate": "2023-11-05",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "6",
+      "name": "Emily Davis",
+      "email": "emily.davis@example.com",
+      "role": "Admin",
+      "status": "active",
+      "lastLogin": "2024-01-15",
+      "joinDate": "2023-05-20",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "7",
+      "name": "Robert Miller",
+      "email": "robert.miller@example.com",
+      "role": "User",
+      "status": "inactive",
+      "lastLogin": "2024-01-08",
+      "joinDate": "2023-12-01",
+      "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "8",
+      "name": "Lisa Anderson",
+      "email": "lisa.anderson@example.com",
+      "role": "Editor",
+      "status": "active",
+      "lastLogin": "2024-01-14",
+      "joinDate": "2023-07-18",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "9",
+      "name": "James Taylor",
+      "email": "james.taylor@example.com",
+      "role": "User",
+      "status": "pending",
+      "lastLogin": "Never",
+      "joinDate": "2024-01-10",
+      "avatar": "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "10",
+      "name": "Maria Garcia",
+      "email": "maria.garcia@example.com",
+      "role": "Admin",
+      "status": "active",
+      "lastLogin": "2024-01-15",
+      "joinDate": "2023-04-12",
+      "avatar": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "11",
+      "name": "Alex Thompson",
+      "email": "alex.thompson@example.com",
+      "role": "Editor",
+      "status": "active",
+      "lastLogin": "2024-01-16",
+      "joinDate": "2023-10-15",
+      "avatar": "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "12",
+      "name": "Rachel Green",
+      "email": "rachel.green@example.com",
+      "role": "User",
+      "status": "active",
+      "lastLogin": "2024-01-15",
+      "joinDate": "2023-12-20",
+      "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "13",
+      "name": "Kevin Lee",
+      "email": "kevin.lee@example.com",
+      "role": "Moderator",
+      "status": "active",
+      "lastLogin": "2024-01-16",
+      "joinDate": "2023-08-30",
+      "avatar": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "14",
+      "name": "Sophie Chen",
+      "email": "sophie.chen@example.com",
+      "role": "Editor",
+      "status": "inactive",
+      "lastLogin": "2024-01-05",
+      "joinDate": "2023-09-25",
+      "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "15",
+      "name": "Daniel Rodriguez",
+      "email": "daniel.rodriguez@example.com",
+      "role": "User",
+      "status": "pending",
+      "lastLogin": "Never",
+      "joinDate": "2024-01-18",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "16",
+      "name": "Amanda White",
+      "email": "amanda.white@example.com",
+      "role": "Admin",
+      "status": "active",
+      "lastLogin": "2024-01-17",
+      "joinDate": "2023-03-15",
+      "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "17",
+      "name": "Chris Martin",
+      "email": "chris.martin@example.com",
+      "role": "Moderator",
+      "status": "active",
+      "lastLogin": "2024-01-16",
+      "joinDate": "2023-11-20",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "18",
+      "name": "Nina Patel",
+      "email": "nina.patel@example.com",
+      "role": "User",
+      "status": "active",
+      "lastLogin": "2024-01-15",
+      "joinDate": "2023-10-08",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "19",
+      "name": "Tom Wilson",
+      "email": "tom.wilson@example.com",
+      "role": "Editor",
+      "status": "inactive",
+      "lastLogin": "2024-01-02",
+      "joinDate": "2023-06-12",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      "id": "20",
+      "name": "Grace Kim",
+      "email": "grace.kim@example.com",
+      "role": "User",
+      "status": "pending",
+      "lastLogin": "Never",
+      "joinDate": "2024-01-20",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face"
+    }
+  ],
+  "meta": {
+    "total": 20,
+    "page": 1,
+    "limit": 10,
+    "totalPages": 2
+  }
+}
