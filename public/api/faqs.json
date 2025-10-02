@@ -1,0 +1,31 @@
+{
+  "faqs": [
+    {
+      "id": "faq-1",
+      "question": "How do I reset my password?",
+      "answer": "Go to the Login page, click 'Forgot password', and follow the instructions sent to your email.",
+      "category": "account",
+      "status": "published",
+      "createdAt": "2024-01-10T09:00:00.000Z",
+      "updatedAt": "2024-01-10T09:00:00.000Z"
+    },
+    {
+      "id": "faq-2",
+      "question": "How can I contact support?",
+      "answer": "Use the 'Contact Us' form or email support@example.com.",
+      "category": "support",
+      "status": "published",
+      "createdAt": "2024-02-15T12:30:00.000Z",
+      "updatedAt": "2024-02-15T12:30:00.000Z"
+    },
+    {
+      "id": "faq-3",
+      "question": "Where can I update my profile information?",
+      "answer": "Navigate to Settings > Profile to update your name, email, and avatar.",
+      "category": "account",
+      "status": "draft",
+      "createdAt": "2024-03-01T08:45:00.000Z",
+      "updatedAt": "2024-03-10T10:00:00.000Z"
+    }
+  ]
+}

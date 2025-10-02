@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { SearchWithSuggestions } from '@/components/ui/search-with-suggestions';
 import UserModal from '@/components/UserModal';
 import DeleteConfirmDialog from '@/components/DeleteConfirmDialog';
+import { toast } from 'sonner';
 import { 
   useGetUsersQuery, 
   useLazySearchUsersQuery, 
@@ -24,8 +25,12 @@ import {
   Filter,
   ChevronLeft,
   ChevronRight,
-  Loader2
+  Loader2,
+  Eye,
+  Ban,
+  CheckCircle
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,6 +59,7 @@ const UserManagement = () => {
   const [createUser, { isLoading: isCreating }] = useCreateUserMutation();
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+  const navigate = useNavigate();
 
   const users = usersData?.users || [];
   const totalPages = usersData?.meta?.totalPages || 1;
@@ -112,9 +118,13 @@ const UserManagement = () => {
     
     try {
       await deleteUser(deletingUser.id).unwrap();
+      toast.success('User deleted', {
+        description: `${deletingUser.name} has been removed.`
+      });
       setDeletingUser(null);
     } catch (error) {
       console.error('Failed to delete user:', error);
+      toast.error('Failed to delete user');
     }
   };
 
@@ -132,17 +142,32 @@ const UserManagement = () => {
     setDeletingUser(user);
   };
 
+  const toggleBlockUser = async (user: User) => {
+    try {
+      const targetStatus = user.status === 'blocked' ? 'active' : 'blocked';
+      await updateUser({ id: user.id, status: targetStatus }).unwrap();
+      toast.success(user.status === 'blocked' ? 'User unblocked' : 'User blocked', {
+        description: `${user.name} has been ${user.status === 'blocked' ? 'unblocked' : 'blocked'}.`
+      });
+    } catch (error) {
+      console.error('Failed to toggle block:', error);
+      toast.error('Failed to update user status');
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'bg-green-100 text-green-800';
       case 'inactive': return 'bg-red-100 text-red-800';
+      case 'blocked': return 'bg-red-200 text-red-900';
       case 'pending': return 'bg-yellow-100 text-yellow-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getRoleColor = (role: string) => {
-    switch (role) {
+    const r = role?.toLowerCase();
+    switch (r) {
       case 'admin': return 'bg-purple-100 text-purple-800';
       case 'editor': return 'bg-blue-100 text-blue-800';
       case 'moderator': return 'bg-orange-100 text-orange-800';
@@ -200,7 +225,7 @@ const UserManagement = () => {
                 <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="blocked">Blocked</SelectItem>
               </SelectContent>
             </Select>
             <Select value={roleFilter} onValueChange={(value: any) => setRoleFilter(value)}>
@@ -286,6 +311,14 @@ const UserManagement = () => {
                           <Button
                             variant="ghost"
                             size="sm"
+                            onClick={() => navigate(`/users/${user.id}`)}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             onClick={() => openEditModal(user)}
                             className="h-8 w-8 p-0"
                           >
@@ -298,6 +331,15 @@ const UserManagement = () => {
                             className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
                           >
                             <Trash2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleBlockUser(user)}
+                            className={`h-8 w-8 p-0 ${user.status === 'blocked' ? 'text-green-600 hover:text-green-700 hover:bg-green-50' : 'text-red-600 hover:text-red-700 hover:bg-red-50'}`}
+                            title={user.status === 'blocked' ? 'Unblock' : 'Block'}
+                          >
+                            {user.status === 'blocked' ? <CheckCircle className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
                           </Button>
                         </div>
                       </td>
@@ -343,16 +385,17 @@ const UserManagement = () => {
       )}
 
       {/* User Modal */}
-      <UserModal
-        isOpen={isUserModalOpen}
-        onClose={() => {
-          setIsUserModalOpen(false);
-          setEditingUser(null);
-        }}
-        onSubmit={editingUser ? handleUpdateUser : handleCreateUser}
-        user={editingUser}
-        isLoading={isCreating || isUpdating}
-      />
+  <UserModal
+    isOpen={isUserModalOpen}
+    onClose={() => {
+      setIsUserModalOpen(false);
+      setEditingUser(null);
+    }}
+    onSubmit={editingUser ? handleUpdateUser : handleCreateUser}
+    user={editingUser}
+    mode={editingUser ? 'edit' : 'create'}
+    isLoading={isCreating || isUpdating}
+  />
 
       {/* Delete Confirmation Dialog */}
       <DeleteConfirmDialog

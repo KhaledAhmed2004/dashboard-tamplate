@@ -55,6 +55,27 @@ export const navigationConfig: NavigationSection[] = [
         icon: Users,
         color: "text-purple-600",
       },
+      {
+        id: "faqs",
+        name: "FAQ Management",
+        href: "/faqs",
+        icon: FileText,
+        color: "text-teal-600",
+      },
+      {
+        id: "privacy",
+        name: "Privacy Policy",
+        href: "/privacy",
+        icon: Shield,
+        color: "text-green-600",
+      },
+      {
+        id: "terms",
+        name: "Terms & Conditions",
+        href: "/terms",
+        icon: FileText,
+        color: "text-gray-600",
+      },
     ],
   },
 ];

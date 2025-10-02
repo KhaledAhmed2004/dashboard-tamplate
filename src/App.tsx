@@ -3,6 +3,11 @@ import { Layout } from "@/components/layout/layout"
 import { Dashboard } from "@/pages/Dashboard"
 import Login from "@/pages/Login"
 import UserManagement from "@/pages/UserManagement"
+import UserDetails from "@/pages/UserDetails"
+import FaqManagement from "@/pages/FaqManagement"
+import PrivacyPolicy from "@/pages/PrivacyPolicy"
+import TermsAndConditions from "@/pages/TermsAndConditions"
+import LegalEditPage from "@/pages/LegalEditPage"
 
 function App() {
   return (
@@ -22,6 +27,37 @@ function App() {
         <Route path="/users" element={
           <Layout>
             <UserManagement />
+          </Layout>
+        } />
+
+        {/* User Details route - with layout */}
+        <Route path="/users/:id" element={
+          <Layout>
+            <UserDetails />
+          </Layout>
+        } />
+        
+        {/* FAQ Management route - with layout */}
+        <Route path="/faqs" element={
+          <Layout>
+            <FaqManagement />
+          </Layout>
+        } />
+
+        {/* Legal routes - with layout */}
+        <Route path="/privacy" element={
+          <Layout>
+            <PrivacyPolicy />
+          </Layout>
+        } />
+        <Route path="/terms" element={
+          <Layout>
+            <TermsAndConditions />
+          </Layout>
+        } />
+        <Route path="/legal/:slug/edit" element={
+          <Layout>
+            <LegalEditPage />
           </Layout>
         } />
         

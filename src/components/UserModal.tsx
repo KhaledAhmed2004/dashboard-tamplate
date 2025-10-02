@@ -27,7 +27,7 @@ const UserModal: React.FC<UserModalProps> = ({
     name: '',
     email: '',
     role: 'user' as 'admin' | 'user' | 'editor' | 'moderator',
-    status: 'active' as 'active' | 'inactive' | 'pending',
+    status: 'active' as 'active' | 'inactive' | 'blocked' | 'pending',
     avatar: ''
   });
 
@@ -38,8 +38,8 @@ const UserModal: React.FC<UserModalProps> = ({
       setFormData({
         name: user.name,
         email: user.email,
-        role: user.role,
-        status: user.status,
+        role: (user.role?.toLowerCase() as 'admin' | 'user' | 'editor' | 'moderator') || 'user',
+        status: (user.status?.toLowerCase() as 'active' | 'inactive' | 'blocked' | 'pending') || 'active',
         avatar: user.avatar || ''
       });
     } else if (mode === 'create') {
@@ -80,7 +80,7 @@ const UserModal: React.FC<UserModalProps> = ({
 
     const userData: Partial<User> = {
       ...formData,
-      avatar: formData.avatar || `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face`,
+      avatar: formData.avatar || `/vite.svg`,
       ...(mode === 'create' && {
         joinDate: new Date().toISOString().split('T')[0],
         lastLogin: 'Never'
@@ -156,7 +156,7 @@ const UserModal: React.FC<UserModalProps> = ({
               <SelectContent>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="blocked">Blocked</SelectItem>
               </SelectContent>
             </Select>
           </div>

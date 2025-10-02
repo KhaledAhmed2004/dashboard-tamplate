@@ -5,10 +5,11 @@ export interface User {
   name: string;
   email: string;
   role: 'admin' | 'user' | 'editor' | 'moderator';
-  status: 'active' | 'inactive' | 'pending';
+  status: 'active' | 'inactive' | 'pending' | 'blocked';
   lastLogin: string;
   joinDate: string;
   avatar: string;
+  blocked?: boolean;
 }
 
 export interface UsersResponse {
@@ -25,8 +26,9 @@ export interface CreateUserRequest {
   name: string;
   email: string;
   role: 'admin' | 'user' | 'editor' | 'moderator';
-  status: 'active' | 'inactive' | 'pending';
+  status: 'active' | 'inactive' | 'pending' | 'blocked';
   avatar?: string;
+  blocked?: boolean;
 }
 
 export interface UpdateUserRequest {
@@ -34,15 +36,16 @@ export interface UpdateUserRequest {
   name?: string;
   email?: string;
   role?: 'admin' | 'user' | 'editor' | 'moderator';
-  status?: 'active' | 'inactive' | 'pending';
+  status?: 'active' | 'inactive' | 'pending' | 'blocked';
   avatar?: string;
+  blocked?: boolean;
 }
 
 export interface UsersQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  status?: 'all' | 'active' | 'inactive' | 'pending';
+  status?: 'all' | 'active' | 'inactive' | 'pending' | 'blocked';
   role?: 'all' | 'admin' | 'user' | 'editor' | 'moderator';
 }
 
@@ -76,7 +79,7 @@ export const usersApi = createApi({
           if (!users) {
             const response = await fetch('/api/users.json');
             const data = await response.json();
-            users = data.users;
+            users = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
             setStoredUsers(users);
           }
 
@@ -93,11 +96,11 @@ export const usersApi = createApi({
           }
 
           if (params.status && params.status !== 'all') {
-            filteredUsers = filteredUsers.filter(user => user.status === params.status);
+            filteredUsers = filteredUsers.filter(user => (user.status || '').toLowerCase() === params.status);
           }
 
           if (params.role && params.role !== 'all') {
-            filteredUsers = filteredUsers.filter(user => user.role === params.role);
+            filteredUsers = filteredUsers.filter(user => (user.role || '').toLowerCase() === params.role);
           }
 
           // Apply pagination
@@ -132,7 +135,8 @@ export const usersApi = createApi({
           if (!users) {
             const response = await fetch('/api/users.json');
             const data = await response.json();
-            setStoredUsers(data.users);
+            const normalized = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
+            setStoredUsers(normalized);
           }
           
           const user = (users || []).find(u => u.id === id);
@@ -156,15 +160,16 @@ export const usersApi = createApi({
           if (!users) {
             const response = await fetch('/api/users.json');
             const data = await response.json();
-            users = data.users;
+            users = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
           }
 
           const newUser: User = {
             id: generateId(),
             ...userData,
-            avatar: userData.avatar || `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face`,
+            avatar: userData.avatar || `/vite.svg`,
             joinDate: new Date().toISOString().split('T')[0],
-            lastLogin: 'Never'
+            lastLogin: 'Never',
+            blocked: userData.blocked ?? false,
           };
 
           const updatedUsers = [...users, newUser];
@@ -186,7 +191,7 @@ export const usersApi = createApi({
           if (!users) {
             const response = await fetch('/api/users.json');
             const data = await response.json();
-            users = data.users;
+            users = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
           }
 
           const userIndex = users.findIndex(u => u.id === id);
@@ -214,7 +219,7 @@ export const usersApi = createApi({
           if (!users) {
             const response = await fetch('/api/users.json');
             const data = await response.json();
-            users = data.users;
+            users = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
           }
 
           const userIndex = users.findIndex(u => u.id === id);
@@ -241,7 +246,7 @@ export const usersApi = createApi({
           if (!users) {
             const response = await fetch('/api/users.json');
             const data = await response.json();
-            users = data.users;
+            users = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
             setStoredUsers(users);
           }
 
