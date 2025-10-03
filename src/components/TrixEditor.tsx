@@ -15,28 +15,36 @@ const TrixEditor: React.FC<TrixEditorProps> = ({ value, onChange, placeholder })
 
   useEffect(() => {
     const input = inputRef.current as any;
-    if (!input) return;
+    const editorEl = editorRef.current as any;
+    if (!input || !editorEl) return;
 
-    // Initialize value
+    // Initialize editor with existing value
     input.value = value || '';
+    if (editorEl.editor) {
+      editorEl.editor.loadHTML(value || '');
+    }
 
-    const handleChange = (event: any) => {
-      const html = event.target?.value || '';
+    const handleChange = () => {
+      const html = input.value || '';
       onChange(html);
     };
 
-    input.addEventListener('trix-change', handleChange);
+    editorEl.addEventListener('trix-change', handleChange);
     return () => {
-      input.removeEventListener('trix-change', handleChange);
+      editorEl.removeEventListener('trix-change', handleChange);
     };
   }, [value, onChange]);
 
   useEffect(() => {
-    // Update editor content if external value changes
+    // Keep editor content in sync when external value changes
     const input = inputRef.current as any;
-    if (!input) return;
-    if (input.value !== value) {
+    const editorEl = editorRef.current as any;
+    if (!input || !editorEl) return;
+    if ((input.value || '') !== (value || '')) {
       input.value = value || '';
+      if (editorEl.editor) {
+        editorEl.editor.loadHTML(value || '');
+      }
     }
   }, [value]);
 

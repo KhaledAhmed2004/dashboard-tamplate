@@ -209,9 +209,8 @@ const FaqManagement: React.FC = () => {
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
-        title="Delete FAQ"
-        description="This action cannot be undone. This will permanently delete the FAQ."
-        loading={isDeleting}
+        userName={deleteTarget?.question || ''}
+        isLoading={isDeleting}
       />
     </div>
   );

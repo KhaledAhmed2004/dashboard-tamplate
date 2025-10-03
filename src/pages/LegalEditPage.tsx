@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import TrixEditor from '@/components/TrixEditor';
-import { useGetLegalBySlugQuery, useUpdateLegalMutation, type LegalDocument, type LegalSection } from '@/store/api/legalApi';
+import TipTapEditor from '@/components/TipTapEditor';
+import { useGetLegalBySlugQuery, useUpdateLegalMutation, type LegalSection } from '@/store/api/legalApi';
 import { toast } from 'sonner';
 
 const slugToTitle: Record<string, string> = {
@@ -17,10 +17,11 @@ const slugToViewPath: Record<string, string> = {
   terms: '/terms',
 };
 
-const LegalEditPage: React.FC = () => {
+const LegalEditPage = () => {
   const { slug = '' } = useParams();
   const navigate = useNavigate();
-  const { data: doc, isLoading } = useGetLegalBySlugQuery(slug, { skip: !slug });
+  const slugKey: 'privacy' | 'terms' = slug === 'privacy' || slug === 'terms' ? slug : 'privacy';
+  const { data: doc, isLoading } = useGetLegalBySlugQuery(slugKey);
   const [updateLegal, { isLoading: isSaving }] = useUpdateLegalMutation();
 
   const [content, setContent] = useState<string>('');
@@ -39,9 +40,9 @@ const LegalEditPage: React.FC = () => {
   const handleSave = async () => {
     try {
       // Save as a single section containing the whole document body
-      await updateLegal({ slug, sections: [{ title: '', body: content }] }).unwrap();
-      toast.success(`${slugToTitle[slug] || 'Document'} updated`);
-      navigate(slugToViewPath[slug] || '/');
+      await updateLegal({ slug: slugKey, sections: [{ title: '', body: content }] }).unwrap();
+      toast.success(`${slugToTitle[slugKey] || 'Document'} updated`);
+      navigate(slugToViewPath[slugKey] || '/');
     } catch (e) {
       toast.error('Failed to save changes');
     }
@@ -51,7 +52,7 @@ const LegalEditPage: React.FC = () => {
     navigate(slugToViewPath[slug] || '/');
   };
 
-  const title = slugToTitle[slug] || doc?.title || 'Document';
+  const title = slugToTitle[slugKey] || doc?.title || 'Document';
 
   return (
     <div className="space-y-6">
@@ -71,7 +72,7 @@ const LegalEditPage: React.FC = () => {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Content</Label>
-                <TrixEditor value={content} onChange={setContent} placeholder="Write the full document content..." />
+                <TipTapEditor value={content} onChange={setContent} placeholder="Write the full document content..." />
               </div>
             </CardContent>
           </Card>

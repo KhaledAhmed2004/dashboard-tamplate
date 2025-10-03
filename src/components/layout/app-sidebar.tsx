@@ -1,14 +1,12 @@
 import * as React from "react";
 import { ChevronRight } from "lucide-react";
 import { useLocation } from "react-router-dom";
-
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -22,8 +20,6 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
-// Removed Button import as footer was deleted
-// Footer avatar block removed
 import { navigationConfig } from "@/config/navigation";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

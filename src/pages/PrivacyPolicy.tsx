@@ -1,18 +1,12 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { useGetLegalBySlugQuery, useUpdateLegalMutation, type LegalDocument } from '@/store/api/legalApi';
-import LegalModal from '@/components/LegalModal';
-import { toast } from 'sonner';
+import { useGetLegalBySlugQuery } from '@/store/api/legalApi';
 
-const PrivacyPolicy: React.FC = () => {
-  const { data: doc, isLoading, refetch } = useGetLegalBySlugQuery('privacy');
+const PrivacyPolicy = () => {
+  const { data: doc, isLoading } = useGetLegalBySlugQuery('privacy');
   const navigate = useNavigate();
-  const [updateLegal, { isLoading: isSaving }] = useUpdateLegalMutation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const updated = doc ? new Date(doc.updatedAt).toLocaleDateString() : new Date().toLocaleDateString();
-  const sections = (doc?.sections || []) as LegalDocument['sections'];
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">

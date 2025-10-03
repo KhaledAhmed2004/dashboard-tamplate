@@ -11,7 +11,7 @@ export interface LoginResponse {
   user?: {
     id: string;
     email: string;
-    role: 'admin' | 'super_admin';
+    role: 'admin' | 'super_admin' | 'metro_admin';
     name: string;
   };
   message?: string;
@@ -22,56 +22,23 @@ export interface ApiError {
   status: number;
 }
 
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
+
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: '/api/auth',
-    prepareHeaders: (headers, { getState }) => {
-      // Add authorization header if token exists
-      const token = localStorage.getItem('adminToken');
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`);
-      }
-      headers.set('content-type', 'application/json');
-      return headers;
-    },
-  }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_BASE, credentials: 'include' }),
   tagTypes: ['Auth'],
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
-      query: (credentials) => ({
-        url: '/login',
-        method: 'POST',
-        body: credentials,
-      }),
-      transformResponse: (response: LoginResponse) => {
-        // Store token in localStorage if login successful
-        if (response.success && response.token) {
-          localStorage.setItem('adminToken', response.token);
-        }
-        return response;
-      },
-      transformErrorResponse: (response: { status: number; data: any }) => ({
-        message: response.data?.message || 'Login failed',
-        status: response.status,
-      }),
-      invalidatesTags: ['Auth'],
+      query: (credentials) => ({ url: '/auth/login', method: 'POST', body: credentials }),
     }),
+
     logout: builder.mutation<{ success: boolean }, void>({
-      query: () => ({
-        url: '/logout',
-        method: 'POST',
-      }),
-      transformResponse: (response: { success: boolean }) => {
-        // Clear token from localStorage
-        localStorage.removeItem('adminToken');
-        return response;
-      },
-      invalidatesTags: ['Auth'],
+      query: () => ({ url: '/auth/logout', method: 'POST' }),
     }),
+
     verifyToken: builder.query<LoginResponse, void>({
-      query: () => '/verify',
-      providesTags: ['Auth'],
+      query: () => ({ url: '/auth/verify', method: 'GET' }),
     }),
   }),
 });

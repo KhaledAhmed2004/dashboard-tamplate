@@ -164,7 +164,7 @@ export const SearchWithSuggestions: React.FC<SearchWithSuggestionsProps> = ({
   };
 
   // Handle input blur
-  const handleBlur = (e: React.FocusEvent) => {
+  const handleBlur = () => {
     // Delay closing to allow for suggestion clicks
     setTimeout(() => {
       if (!dropdownRef.current?.contains(document.activeElement)) {
@@ -362,5 +362,3 @@ export const SearchWithSuggestions: React.FC<SearchWithSuggestionsProps> = ({
     </div>
   );
 };
-
-export { SearchSuggestion };

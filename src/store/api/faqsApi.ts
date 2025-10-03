@@ -43,206 +43,76 @@ export interface FaqsQueryParams {
   category?: string | 'all';
 }
 
-// Local storage helpers for mock persistence
-const getStoredFaqs = (): Faq[] | null => {
-  const stored = localStorage.getItem('mockFaqs');
-  return stored ? JSON.parse(stored) : null;
-};
-
-const setStoredFaqs = (faqs: Faq[]): void => {
-  localStorage.setItem('mockFaqs', JSON.stringify(faqs));
-};
-
-const generateId = (): string => {
-  return Date.now().toString() + Math.random().toString(36).substr(2, 9);
-};
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
 export const faqsApi = createApi({
   reducerPath: 'faqsApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_BASE, credentials: 'include' }),
   tagTypes: ['Faq'],
   endpoints: (builder) => ({
     getFaqs: builder.query<FaqsResponse, FaqsQueryParams>({
-      queryFn: async (params) => {
-        try {
-          let faqs = getStoredFaqs();
-          if (!faqs) {
-            const response = await fetch('/api/faqs.json');
-            const data = await response.json();
-            faqs = data.faqs as Faq[];
-            setStoredFaqs(faqs);
-          }
-
-          let filteredFaqs = faqs;
-
-          if (params.search) {
-            const q = params.search.toLowerCase();
-            filteredFaqs = filteredFaqs.filter(f =>
-              f.question.toLowerCase().includes(q) ||
-              f.answer.toLowerCase().includes(q) ||
-              (f.category || '').toLowerCase().includes(q)
-            );
-          }
-
-          if (params.status && params.status !== 'all') {
-            filteredFaqs = filteredFaqs.filter(f => (f.status || '').toLowerCase() === params.status);
-          }
-
-          if (params.category && params.category !== 'all') {
-            filteredFaqs = filteredFaqs.filter(f => (f.category || '').toLowerCase() === params.category?.toLowerCase());
-          }
-
-          const page = params.page || 1;
-          const limit = params.limit || 10;
-          const start = (page - 1) * limit;
-          const end = start + limit;
-          const paginated = filteredFaqs.slice(start, end);
-
-          return {
-            data: {
-              faqs: paginated,
-              meta: {
-                total: filteredFaqs.length,
-                page,
-                limit,
-                totalPages: Math.ceil(filteredFaqs.length / limit),
-              },
-            },
-          };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to fetch FAQs' } };
+      query: () => ({ url: '/faqs' }),
+      transformResponse: (response: { faqs: Faq[] }, _meta, params) => {
+        const faqs = response.faqs || [];
+        let filtered = faqs;
+        if (params?.search) {
+          const q = params.search.toLowerCase();
+          filtered = filtered.filter(f =>
+            f.question.toLowerCase().includes(q) ||
+            f.answer.toLowerCase().includes(q) ||
+            (f.category || '').toLowerCase().includes(q)
+          );
         }
+        if (params?.status && params.status !== 'all') {
+          filtered = filtered.filter(f => (f.status || '').toLowerCase() === params.status);
+        }
+        if (params?.category && params.category !== 'all') {
+          filtered = filtered.filter(f => (f.category || '').toLowerCase() === params.category.toLowerCase());
+        }
+        const page = params?.page || 1;
+        const limit = params?.limit || 10;
+        const start = (page - 1) * limit;
+        const end = start + limit;
+        const paginated = filtered.slice(start, end);
+        return { faqs: paginated, meta: { total: filtered.length, page, limit, totalPages: Math.ceil(filtered.length / limit) } } as FaqsResponse;
       },
       providesTags: ['Faq'],
     }),
 
     getFaqById: builder.query<Faq, string>({
-      queryFn: async (id) => {
-        try {
-          let faqs = getStoredFaqs();
-          if (!faqs) {
-            const response = await fetch('/api/faqs.json');
-            const data = await response.json();
-            faqs = data.faqs as Faq[];
-            setStoredFaqs(faqs);
-          }
-
-          const faq = (faqs || []).find(f => f.id === id);
-          if (!faq) {
-            return { error: { status: 404, data: 'FAQ not found' } } as any;
-          }
-          return { data: faq };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to fetch FAQ' } };
-        }
+      query: (id) => ({ url: `/faqs/${id}` }),
+      providesTags: (result, error, id) => {
+        void result; void error; return [{ type: 'Faq', id }];
       },
-      providesTags: (result, error, id) => [{ type: 'Faq', id }],
     }),
 
     createFaq: builder.mutation<Faq, CreateFaqRequest>({
-      queryFn: async (faqData) => {
-        try {
-          let faqs = getStoredFaqs() || [];
-          if (faqs.length === 0) {
-            const response = await fetch('/api/faqs.json');
-            const data = await response.json();
-            faqs = data.faqs as Faq[];
-          }
-
-          const now = new Date().toISOString();
-          const newFaq: Faq = {
-            id: generateId(),
-            question: faqData.question,
-            answer: faqData.answer,
-            category: faqData.category,
-            status: faqData.status,
-            createdAt: now,
-            updatedAt: now,
-          };
-
-          const updated = [newFaq, ...faqs];
-          setStoredFaqs(updated);
-          return { data: newFaq };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to create FAQ' } };
-        }
-      },
+      query: (faqData) => ({ url: '/faqs', method: 'POST', body: faqData }),
       invalidatesTags: ['Faq'],
     }),
 
     updateFaq: builder.mutation<Faq, UpdateFaqRequest>({
-      queryFn: async ({ id, ...update }) => {
-        try {
-          let faqs = getStoredFaqs();
-          if (!faqs) {
-            const response = await fetch('/api/faqs.json');
-            const data = await response.json();
-            faqs = data.faqs as Faq[];
-          }
-
-          const idx = faqs.findIndex(f => f.id === id);
-          if (idx === -1) {
-            return { error: { status: 404, data: 'FAQ not found' } } as any;
-          }
-
-          const now = new Date().toISOString();
-          const updatedFaq = { ...faqs[idx], ...update, updatedAt: now } as Faq;
-          faqs[idx] = updatedFaq;
-          setStoredFaqs(faqs);
-          return { data: updatedFaq };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to update FAQ' } };
-        }
+      query: ({ id, ...update }) => ({ url: `/faqs/${id}`, method: 'PUT', body: update }),
+      invalidatesTags: (result, error, { id }) => {
+        void result; void error; return [{ type: 'Faq', id }, 'Faq'];
       },
-      invalidatesTags: (result, error, { id }) => [{ type: 'Faq', id }, 'Faq'],
     }),
 
     deleteFaq: builder.mutation<{ success: boolean }, string>({
-      queryFn: async (id) => {
-        try {
-          let faqs = getStoredFaqs();
-          if (!faqs) {
-            const response = await fetch('/api/faqs.json');
-            const data = await response.json();
-            faqs = data.faqs as Faq[];
-          }
-
-          const idx = faqs.findIndex(f => f.id === id);
-          if (idx === -1) {
-            return { error: { status: 404, data: 'FAQ not found' } } as any;
-          }
-
-          faqs.splice(idx, 1);
-          setStoredFaqs(faqs);
-          return { data: { success: true } };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to delete FAQ' } };
-        }
-      },
+      query: (id) => ({ url: `/faqs/${id}`, method: 'DELETE' }),
       invalidatesTags: ['Faq'],
     }),
 
     searchFaqs: builder.query<Faq[], string>({
-      queryFn: async (query) => {
-        try {
-          let faqs = getStoredFaqs();
-          if (!faqs) {
-            const response = await fetch('/api/faqs.json');
-            const data = await response.json();
-            faqs = data.faqs as Faq[];
-            setStoredFaqs(faqs);
-          }
-
-          const q = (query || '').toLowerCase();
-          const results = faqs.filter(f =>
-            f.question.toLowerCase().includes(q) ||
-            f.answer.toLowerCase().includes(q) ||
-            (f.category || '').toLowerCase().includes(q)
-          );
-          return { data: results };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to search FAQs' } };
-        }
+      query: () => ({ url: '/faqs' }),
+      transformResponse: (response: { faqs: Faq[] }, _meta, query) => {
+        const list = response.faqs || [];
+        const q = (query || '').toLowerCase();
+        return list.filter(f =>
+          f.question.toLowerCase().includes(q) ||
+          f.answer.toLowerCase().includes(q) ||
+          (f.category || '').toLowerCase().includes(q)
+        );
       },
     }),
   }),
@@ -256,5 +126,3 @@ export const {
   useDeleteFaqMutation,
   useLazySearchFaqsQuery,
 } = faqsApi;
-
-export type { Faq };

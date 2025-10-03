@@ -1,21 +1,11 @@
 import {
-  BarChart3,
   Users,
-  Settings,
   Plus,
   Bell,
   Search,
   LayoutDashboard,
   FileText,
-  ShoppingCart,
-  CreditCard,
-  Package,
-  Truck,
-  UserCheck,
   Shield,
-  Database,
-  Mail,
-  Calendar,
 } from "lucide-react";
 import type { ComponentType } from "react";
 

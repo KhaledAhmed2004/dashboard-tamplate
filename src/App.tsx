@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Layout } from "@/components/layout/layout"
+import { Layout } from "@/components/layout/Layout"
+import AuthGuard from "@/components/AuthGuard"
 import { Dashboard } from "@/pages/Dashboard"
 import Login from "@/pages/Login"
 import UserManagement from "@/pages/UserManagement"
@@ -18,47 +19,61 @@ function App() {
         
         {/* Dashboard route - with layout */}
         <Route path="/dashboard" element={
-          <Layout>
-            <Dashboard />
-          </Layout>
+          <AuthGuard>
+            <Layout>
+              <Dashboard />
+            </Layout>
+          </AuthGuard>
         } />
         
         {/* User Management routes - with layout */}
         <Route path="/users" element={
-          <Layout>
-            <UserManagement />
-          </Layout>
+          <AuthGuard>
+            <Layout>
+              <UserManagement />
+            </Layout>
+          </AuthGuard>
         } />
 
         {/* User Details route - with layout */}
         <Route path="/users/:id" element={
-          <Layout>
-            <UserDetails />
-          </Layout>
+          <AuthGuard>
+            <Layout>
+              <UserDetails />
+            </Layout>
+          </AuthGuard>
         } />
         
         {/* FAQ Management route - with layout */}
         <Route path="/faqs" element={
-          <Layout>
-            <FaqManagement />
-          </Layout>
+          <AuthGuard>
+            <Layout>
+              <FaqManagement />
+            </Layout>
+          </AuthGuard>
         } />
 
         {/* Legal routes - with layout */}
         <Route path="/privacy" element={
-          <Layout>
-            <PrivacyPolicy />
-          </Layout>
+          <AuthGuard>
+            <Layout>
+              <PrivacyPolicy />
+            </Layout>
+          </AuthGuard>
         } />
         <Route path="/terms" element={
-          <Layout>
-            <TermsAndConditions />
-          </Layout>
+          <AuthGuard>
+            <Layout>
+              <TermsAndConditions />
+            </Layout>
+          </AuthGuard>
         } />
         <Route path="/legal/:slug/edit" element={
-          <Layout>
-            <LegalEditPage />
-          </Layout>
+          <AuthGuard>
+            <Layout>
+              <LegalEditPage />
+            </Layout>
+          </AuthGuard>
         } />
         
         {/* Default redirect to user management for direct access */}

@@ -3,6 +3,7 @@ import { authApi } from './api/authApi';
 import { usersApi } from './api/usersApi';
 import { faqsApi } from './api/faqsApi';
 import { legalApi } from './api/legalApi';
+import { dashboardApi } from './api/dashboardApi';
 
 export const store = configureStore({
   reducer: {
@@ -10,9 +11,16 @@ export const store = configureStore({
     [usersApi.reducerPath]: usersApi.reducer,
     [faqsApi.reducerPath]: faqsApi.reducer,
     [legalApi.reducerPath]: legalApi.reducer,
+    [dashboardApi.reducerPath]: dashboardApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware, usersApi.middleware, faqsApi.middleware, legalApi.middleware),
+    getDefaultMiddleware().concat(
+      authApi.middleware,
+      usersApi.middleware,
+      faqsApi.middleware,
+      legalApi.middleware,
+      dashboardApi.middleware
+    ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

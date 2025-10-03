@@ -49,220 +49,77 @@ export interface UsersQueryParams {
   role?: 'all' | 'admin' | 'user' | 'editor' | 'moderator';
 }
 
-// Simulate local storage for mock data persistence
-const getStoredUsers = (): User[] => {
-  const stored = localStorage.getItem('mockUsers');
-  return stored ? JSON.parse(stored) : null;
-};
-
-const setStoredUsers = (users: User[]): void => {
-  localStorage.setItem('mockUsers', JSON.stringify(users));
-};
-
-const generateId = (): string => {
-  return Date.now().toString() + Math.random().toString(36).substr(2, 9);
-};
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
 export const usersApi = createApi({
   reducerPath: 'usersApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: '/api',
-  }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_BASE, credentials: 'include' }),
   tagTypes: ['User'],
   endpoints: (builder) => ({
     getUsers: builder.query<UsersResponse, UsersQueryParams>({
-      queryFn: async (params) => {
-        try {
-          // Try to get from localStorage first, then fallback to JSON file
-          let users = getStoredUsers();
-          
-          if (!users) {
-            const response = await fetch('/api/users.json');
-            const data = await response.json();
-            users = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
-            setStoredUsers(users);
-          }
-
-          // Apply filters
-          let filteredUsers = users;
-
-          if (params.search) {
-            const searchLower = params.search.toLowerCase();
-            filteredUsers = filteredUsers.filter(user =>
-              user.name.toLowerCase().includes(searchLower) ||
-              user.email.toLowerCase().includes(searchLower) ||
-              user.role.toLowerCase().includes(searchLower)
-            );
-          }
-
-          if (params.status && params.status !== 'all') {
-            filteredUsers = filteredUsers.filter(user => (user.status || '').toLowerCase() === params.status);
-          }
-
-          if (params.role && params.role !== 'all') {
-            filteredUsers = filteredUsers.filter(user => (user.role || '').toLowerCase() === params.role);
-          }
-
-          // Apply pagination
-          const page = params.page || 1;
-          const limit = params.limit || 10;
-          const startIndex = (page - 1) * limit;
-          const endIndex = startIndex + limit;
-          const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
-
-          return {
-            data: {
-              users: paginatedUsers,
-              meta: {
-                total: filteredUsers.length,
-                page,
-                limit,
-                totalPages: Math.ceil(filteredUsers.length / limit)
-              }
-            }
-          };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to fetch users' } };
+      query: () => ({ url: '/users' }),
+      transformResponse: (response: { users: User[] }, _meta, params) => {
+        const users = (response.users || []).map(u => ({ ...u, blocked: u.blocked ?? false }));
+        let filteredUsers = users;
+        if (params?.search) {
+          const s = params.search.toLowerCase();
+          filteredUsers = filteredUsers.filter(u =>
+            u.name.toLowerCase().includes(s) ||
+            u.email.toLowerCase().includes(s) ||
+            u.role.toLowerCase().includes(s)
+          );
         }
+        if (params?.status && params.status !== 'all') {
+          filteredUsers = filteredUsers.filter(u => (u.status || '').toLowerCase() === params.status);
+        }
+        if (params?.role && params.role !== 'all') {
+          filteredUsers = filteredUsers.filter(u => (u.role || '').toLowerCase() === params.role);
+        }
+        const page = params?.page || 1;
+        const limit = params?.limit || 10;
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+        const paginated = filteredUsers.slice(startIndex, endIndex);
+        return {
+          users: paginated,
+          meta: { total: filteredUsers.length, page, limit, totalPages: Math.ceil(filteredUsers.length / limit) },
+        } as UsersResponse;
       },
       providesTags: ['User'],
     }),
 
     getUserById: builder.query<User, string>({
-      queryFn: async (id) => {
-        try {
-          const users = getStoredUsers();
-          if (!users) {
-            const response = await fetch('/api/users.json');
-            const data = await response.json();
-            const normalized = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
-            setStoredUsers(normalized);
-          }
-          
-          const user = (users || []).find(u => u.id === id);
-          if (!user) {
-            return { error: { status: 404, data: 'User not found' } };
-          }
-          
-          return { data: user };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to fetch user' } };
-        }
+      query: (id) => ({ url: `/users/${id}` }),
+      providesTags: (result, error, id) => {
+        void result; void error; return [{ type: 'User', id }];
       },
-      providesTags: (result, error, id) => [{ type: 'User', id }],
     }),
 
     createUser: builder.mutation<User, CreateUserRequest>({
-      queryFn: async (userData) => {
-        try {
-          let users = getStoredUsers();
-          
-          if (!users) {
-            const response = await fetch('/api/users.json');
-            const data = await response.json();
-            users = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
-          }
-
-          const newUser: User = {
-            id: generateId(),
-            ...userData,
-            avatar: userData.avatar || `/vite.svg`,
-            joinDate: new Date().toISOString().split('T')[0],
-            lastLogin: 'Never',
-            blocked: userData.blocked ?? false,
-          };
-
-          const updatedUsers = [...users, newUser];
-          setStoredUsers(updatedUsers);
-
-          return { data: newUser };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to create user' } };
-        }
-      },
+      query: (userData) => ({ url: '/users', method: 'POST', body: userData }),
       invalidatesTags: ['User'],
     }),
 
     updateUser: builder.mutation<User, UpdateUserRequest>({
-      queryFn: async ({ id, ...updateData }) => {
-        try {
-          let users = getStoredUsers();
-          
-          if (!users) {
-            const response = await fetch('/api/users.json');
-            const data = await response.json();
-            users = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
-          }
-
-          const userIndex = users.findIndex(u => u.id === id);
-          if (userIndex === -1) {
-            return { error: { status: 404, data: 'User not found' } };
-          }
-
-          const updatedUser = { ...users[userIndex], ...updateData };
-          users[userIndex] = updatedUser;
-          setStoredUsers(users);
-
-          return { data: updatedUser };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to update user' } };
-        }
+      query: ({ id, ...updateData }) => ({ url: `/users/${id}`, method: 'PUT', body: updateData }),
+      invalidatesTags: (result, error, { id }) => {
+        void result; void error; return [{ type: 'User', id }, 'User'];
       },
-      invalidatesTags: (result, error, { id }) => [{ type: 'User', id }, 'User'],
     }),
 
     deleteUser: builder.mutation<{ success: boolean }, string>({
-      queryFn: async (id) => {
-        try {
-          let users = getStoredUsers();
-          
-          if (!users) {
-            const response = await fetch('/api/users.json');
-            const data = await response.json();
-            users = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
-          }
-
-          const userIndex = users.findIndex(u => u.id === id);
-          if (userIndex === -1) {
-            return { error: { status: 404, data: 'User not found' } };
-          }
-
-          users.splice(userIndex, 1);
-          setStoredUsers(users);
-
-          return { data: { success: true } };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to delete user' } };
-        }
-      },
+      query: (id) => ({ url: `/users/${id}`, method: 'DELETE' }),
       invalidatesTags: ['User'],
     }),
 
     searchUsers: builder.query<User[], string>({
-      queryFn: async (query) => {
-        try {
-          let users = getStoredUsers();
-          
-          if (!users) {
-            const response = await fetch('/api/users.json');
-            const data = await response.json();
-            users = data.users.map((u: any) => ({ ...u, blocked: u.blocked ?? false }));
-            setStoredUsers(users);
-          }
-
-          const searchLower = query.toLowerCase();
-          const filtered = users
-            .filter(user =>
-              user.name.toLowerCase().includes(searchLower) ||
-              user.email.toLowerCase().includes(searchLower) ||
-              user.role.toLowerCase().includes(searchLower)
-            )
-            .slice(0, 8);
-
-          return { data: filtered };
-        } catch (error) {
-          return { error: { status: 'FETCH_ERROR', error: 'Failed to search users' } };
-        }
+      query: () => ({ url: '/users' }),
+      transformResponse: (response: { users: User[] }, _meta, query) => {
+        const list = (response.users || []).map(u => ({ ...u, blocked: u.blocked ?? false }));
+        const s = (query || '').toLowerCase();
+        return list
+          .filter(u => u.name.toLowerCase().includes(s) || u.email.toLowerCase().includes(s) || u.role.toLowerCase().includes(s))
+          .slice(0, 8);
       },
     }),
   }),
@@ -276,6 +133,3 @@ export const {
   useDeleteUserMutation,
   useLazySearchUsersQuery,
 } = usersApi;
-
-// Export the User type for use in components
-export type { User };
