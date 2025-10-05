@@ -8,8 +8,7 @@
       "status": "active",
       "lastLogin": "2024-01-15",
       "joinDate": "2023-06-15",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -20,8 +19,7 @@
       "status": "active",
       "lastLogin": "2024-01-14",
       "joinDate": "2023-08-20",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -32,8 +30,7 @@
       "status": "inactive",
       "lastLogin": "2024-01-10",
       "joinDate": "2023-09-10",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -44,8 +41,7 @@
       "status": "pending",
       "lastLogin": "Never",
       "joinDate": "2024-01-12",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -56,8 +52,7 @@
       "status": "active",
       "lastLogin": "2024-01-13",
       "joinDate": "2023-11-05",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -68,8 +63,7 @@
       "status": "active",
       "lastLogin": "2024-01-15",
       "joinDate": "2023-05-20",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -80,8 +74,7 @@
       "status": "inactive",
       "lastLogin": "2024-01-08",
       "joinDate": "2023-12-01",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -92,8 +85,7 @@
       "status": "active",
       "lastLogin": "2024-01-14",
       "joinDate": "2023-07-18",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -104,8 +96,7 @@
       "status": "pending",
       "lastLogin": "Never",
       "joinDate": "2024-01-10",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -116,8 +107,7 @@
       "status": "active",
       "lastLogin": "2024-01-15",
       "joinDate": "2023-04-12",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -128,8 +118,7 @@
       "status": "active",
       "lastLogin": "2024-01-16",
       "joinDate": "2023-10-15",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -140,8 +129,7 @@
       "status": "active",
       "lastLogin": "2024-01-15",
       "joinDate": "2023-12-20",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -152,8 +140,7 @@
       "status": "active",
       "lastLogin": "2024-01-16",
       "joinDate": "2023-08-30",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -164,8 +151,7 @@
       "status": "inactive",
       "lastLogin": "2024-01-05",
       "joinDate": "2023-09-25",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -176,8 +162,7 @@
       "status": "pending",
       "lastLogin": "Never",
       "joinDate": "2024-01-18",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -188,8 +173,7 @@
       "status": "active",
       "lastLogin": "2024-01-17",
       "joinDate": "2023-03-15",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -200,8 +184,7 @@
       "status": "active",
       "lastLogin": "2024-01-16",
       "joinDate": "2023-11-20",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     },
     {
@@ -232,15 +215,8 @@
       "status": "pending",
       "lastLogin": "Never",
       "joinDate": "2024-01-20",
-      "avatar": "/vite.svg"
-    ,
+      "avatar": "/vite.svg",
       "blocked": false
     }
-  ],
-  "meta": {
-    "total": 20,
-    "page": 1,
-    "limit": 10,
-    "totalPages": 2
-  }
+  ]
 }

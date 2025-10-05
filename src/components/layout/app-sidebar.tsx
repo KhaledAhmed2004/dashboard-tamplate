@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ChevronRight } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -67,7 +67,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                       isActive={isSubActive}
                                       className="data-[active=true]:bg-muted data-[active=true]:text-foreground"
                                     >
-                                      <a href={subItem.href}>
+                                      <Link to={subItem.href || "#"}>
                                         <subItem.icon className="h-4 w-4" />
                                         <span>{subItem.name}</span>
                                         {subItem.badge && (
@@ -78,7 +78,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                             {subItem.badge}
                                           </Badge>
                                         )}
-                                      </a>
+                                      </Link>
                                     </SidebarMenuSubButton>
                                   </SidebarMenuSubItem>
                                 );
@@ -98,7 +98,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         isActive={isActive}
                         className="data-[active=true]:bg-muted data-[active=true]:text-foreground"
                       >
-                        <a href={item.href}>
+                        <Link to={item.href || "#"}>
                           <item.icon
                             className={`h-4 w-4 ${
                               item.color || "text-muted-foreground"
@@ -113,7 +113,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                               {item.badge}
                             </Badge>
                           )}
-                        </a>
+                        </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );

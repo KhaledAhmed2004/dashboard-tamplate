@@ -28,6 +28,16 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from '@/components/ui/pagination';
 
 const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -87,6 +97,7 @@ const UserManagement = () => {
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
     setSearchTerm(value); // Update the actual search term for API calls
+    setCurrentPage(1);
   };
 
   const handleCreateUser = async (userData: any) => {
@@ -214,7 +225,7 @@ const UserManagement = () => {
                 onSearch={simulateAsyncSearch}
               />
             </div>
-            <Select value={statusFilter} onValueChange={(value: any) => setStatusFilter(value)}>
+            <Select value={statusFilter} onValueChange={(value: any) => { setStatusFilter(value); setCurrentPage(1); }}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -225,7 +236,7 @@ const UserManagement = () => {
                 <SelectItem value="blocked">Blocked</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={roleFilter} onValueChange={(value: any) => setRoleFilter(value)}>
+            <Select value={roleFilter} onValueChange={(value: any) => { setRoleFilter(value); setCurrentPage(1); }}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Role" />
               </SelectTrigger>
@@ -251,9 +262,35 @@ const UserManagement = () => {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin" />
-              <span className="ml-2">Loading users...</span>
+            <div className="space-y-4">
+              {/* Table header skeleton */}
+              <div className="grid grid-cols-6 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} className="h-4 w-full" />
+                ))}
+              </div>
+              {/* Rows skeleton */}
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="grid grid-cols-6 gap-4 items-center">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-10 w-10 rounded-full" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-40" />
+                      <Skeleton className="h-3 w-56" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-6 w-24" />
+                  <Skeleton className="h-6 w-24" />
+                  <Skeleton className="h-4 w-28" />
+                  <Skeleton className="h-4 w-28" />
+                  <div className="flex justify-end gap-2">
+                    <Skeleton className="h-8 w-8" />
+                    <Skeleton className="h-8 w-8" />
+                    <Skeleton className="h-8 w-8" />
+                    <Skeleton className="h-8 w-8" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : !users || users.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
@@ -355,29 +392,52 @@ const UserManagement = () => {
           <div className="text-sm text-gray-600">
             Showing {((currentPage - 1) * 10) + 1} to {Math.min(currentPage * 10, totalUsers)} of {totalUsers} users
           </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Previous
-            </Button>
-            <span className="text-sm text-gray-600">
-              Page {currentPage} of {totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-              disabled={currentPage === totalPages}
-            >
-              Next
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); setCurrentPage(prev => Math.max(1, prev - 1)); }}
+                />
+              </PaginationItem>
+              {(() => {
+                const items: (number | 'ellipsis')[] = [];
+                if (totalPages <= 7) {
+                  for (let i = 1; i <= totalPages; i++) items.push(i);
+                } else {
+                  items.push(1);
+                  if (currentPage > 3) items.push('ellipsis');
+                  const start = Math.max(2, currentPage - 1);
+                  const end = Math.min(totalPages - 1, currentPage + 1);
+                  for (let i = start; i <= end; i++) items.push(i);
+                  if (currentPage < totalPages - 2) items.push('ellipsis');
+                  items.push(totalPages);
+                }
+
+                return items.map((p, idx) => (
+                  <PaginationItem key={`${p}-${idx}`}>
+                    {p === 'ellipsis' ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        href="#"
+                        isActive={currentPage === p}
+                        onClick={(e) => { e.preventDefault(); setCurrentPage(p as number); }}
+                      >
+                        {p}
+                      </PaginationLink>
+                    )}
+                  </PaginationItem>
+                ));
+              })()}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); setCurrentPage(prev => Math.min(totalPages, prev + 1)); }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       )}
 

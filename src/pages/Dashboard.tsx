@@ -14,6 +14,7 @@ import {
   Bar,
 } from 'recharts'
 import { useGetDashboardStatsQuery } from '@/store/api/dashboardApi'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function Dashboard() {
   const { data, isLoading: loading, error } = useGetDashboardStatsQuery()
@@ -32,7 +33,32 @@ export function Dashboard() {
       </header>
 
       {loading && (
-        <div className="text-sm text-muted-foreground">Loading dashboard...</div>
+        <section className="space-y-8">
+          {/* KPI Skeletons */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="rounded-lg border p-4 space-y-3">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-4 w-48" />
+                <Skeleton className="h-8 w-24" />
+              </div>
+            ))}
+          </div>
+
+          {/* Chart Skeletons */}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="rounded-lg border">
+                <div className="p-4">
+                  <Skeleton className="h-5 w-48" />
+                </div>
+                <div className="p-4">
+                  <Skeleton className="h-64 w-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       )}
       {errorMsg && (
         <div className="text-sm text-red-600">{errorMsg}</div>
